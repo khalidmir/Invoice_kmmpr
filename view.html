@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice Viewer | KM MARKETING & PR</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #fff;
+      padding: 30px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      border-radius: 10px;
+    }
+    h1, h2, h3 {
+      color: #003366;
+    }
+    ul {
+      padding-left: 20px;
+    }
+    .not-found {
+      color: red;
+      text-align: center;
+      margin-top: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" id="invoiceContainer">
+    <h1>Invoice Preview</h1>
+    <div id="invoiceContent">Loading...</div>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    const stored = localStorage.getItem(`invoice_${id}`);
+    const container = document.getElementById("invoiceContent");
+
+    if (stored) {
+      const data = JSON.parse(stored);
+      container.innerHTML = `
+        <h2>Invoice #: ${data.invoiceNumber}</h2>
+        <p><strong>Date:</strong> ${data.invoiceDate}</p>
+        <p><strong>Client:</strong> ${data.clientName}</p>
+        <p><strong>Company:</strong> ${data.companyName}</p>
+        <p><strong>Total:</strong> ${data.currency} ${data.totalAmount}</p>
+        <h3>Items:</h3>
+        <ul>
+          ${data.items.map(item => `<li>${item.description} – ${item.quantity} x ${item.price} = ${item.total}</li>`).join('')}
+        </ul>
+        <p><strong>Note:</strong> ${data.note || 'N/A'}</p>
+      `;
+    } else {
+      document.getElementById('invoiceContainer').innerHTML = '<h2 class="not-found">Invoice not found or expired.</h2>';
+    }
+  </script>
+</body>
+</html>
