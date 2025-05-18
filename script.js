@@ -157,12 +157,16 @@ function generateInvoice() {
         return;
     }
     
-    // Generate invoice number (format: KM-MMDD-XXX)
-    const date = new Date();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const randomSuffix = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-    const invoiceNumber = `KM-${month}${day}-${randomSuffix}`;
+// Generate invoice number (format: KM-MMDD-HHMM)
+const date = new Date();
+const month = String(date.getMonth() + 1).padStart(2, '0');
+const day = String(date.getDate()).padStart(2, '0');
+const hours = String(date.getHours()).padStart(2, '0');
+const minutes = String(date.getMinutes()).padStart(2, '0');
+const invoiceNumber = `KM-${month}${day}-${hours}${minutes}`;
+
+// Inject TRN above invoice number
+document.getElementById('invoiceTRN').textContent = 'UAE-TRN: 104052342300003';
     
     // Format date
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -174,6 +178,7 @@ function generateInvoice() {
     const currencySymbol = currencySymbols[currencyCode] || currencyCode;
     
     // Update invoice preview
+    document.getElementById('invoiceTRN').textContent = 'UAE-TRN: 104052342300003';
     document.getElementById('invoiceNumber').textContent = invoiceNumber;
     document.getElementById('invoiceDate').textContent = formattedDate;
     document.getElementById('previewClientName').textContent = document.getElementById('clientName').value;
