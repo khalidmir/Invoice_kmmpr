@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('saveToGoogleSheet').addEventListener('click', saveToGoogleSheet);
     
     // Add event listeners for calculation
-ddocument.getElementById('itemsContainer').addEventListener('input', function (e) {
+document.getElementById('itemsContainer').addEventListener('input', function (e) {
     if (
         e.target.classList.contains('item-quantity') ||
         e.target.classList.contains('item-price')
