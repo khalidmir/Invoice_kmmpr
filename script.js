@@ -546,15 +546,15 @@ function downloadPdf() {
     pdf.text('SWIFT Code:', bankDetailsX1, bankDetailsY, { align: 'right' });
     pdf.text('NRAKAEAK', bankDetailsX2, bankDetailsY);
     
-    // Add Crypto wallet details
+    // Add TRN /VAT detail
     const cryptoY = bankDetailsY + 12;
-    pdf.setFontSize(12);
+    pdf.setFontSize(11);
     pdf.setTextColor(0, 51, 102); // Dark blue
-    pdf.text('Crypto USDT (TRC20) Wallet:', 105, cryptoY, { align: 'center' });
+    pdf.text('UAE TRN/VAT:', 105, trn, { align: 'center' });
     
     pdf.setFontSize(10);
     pdf.setTextColor(0, 0, 0); // Black text
-    pdf.text('TVRStYqh3ANVqmng61bhQyH6gHFLkzJAXP', 105, cryptoY + 8, { align: 'center' });
+    pdf.text('104052342300003', 105, trn + 8, { align: 'center' });
     
     // Add thank you message
     const thankY = cryptoY + 20;
