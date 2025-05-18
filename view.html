@@ -24,14 +24,38 @@
     .label {
       font-weight: bold;
     }
+    .actions {
+      margin-top: 20px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 14px;
+      background: #003366;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #0055aa;
+    }
   </style>
 </head>
 <body>
   <div class="invoice-box" id="invoiceBox">Loading...</div>
+  <div class="actions" id="downloadArea" style="display:none;">
+    <button onclick="downloadInvoicePDF()">Download PDF</button>
+  </div>
+
+  <!-- JS libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
   <script>
     const id = new URLSearchParams(window.location.search).get('id');
     const apiUrl = 'https://script.google.com/macros/s/AKfycbzcoo8h1wWGg3dLFiJUJd3PVVCt-sqW5pkFpisy3c-xfHeT2s9k-tC5PPE9-_iMGlyl/exec?id=' + id;
+
+    let invoiceHtml = '';
 
     fetch(apiUrl)
       .then(res => res.json())
@@ -39,7 +63,7 @@
         if (data.error) {
           document.getElementById('invoiceBox').innerHTML = '<h2 style="color:red;">Invoice not found or expired.</h2>';
         } else {
-          const html = `
+          invoiceHtml = `
             <h2>Invoice Preview</h2>
             <p><span class="label">Invoice #:</span> <strong>${data.invoiceNumber}</strong></p>
             <p><span class="label">Date:</span> ${data.invoiceDate}</p>
@@ -48,7 +72,7 @@
             <p><span class="label">Total:</span> ${data.currency} ${data.totalAmount}</p>
             <h3>Items:</h3>
             <ul>
-              ${data.items.map(item => `<li>${item.description} – ${item.quantity} x ${item.price} = ${item.total}</li>`).join('')}
+              ${data.items.map(item => `<li>${item.description} – ${item.quantity} x ${item.price} = <strong>${item.total}</strong></li>`).join('')}
             </ul>
             <p><span class="label">Note:</span> ${data.note || 'N/A'}</p>
             <hr />
@@ -57,12 +81,28 @@
             <a href="https://pay.kmmpr.com/b/4gw2bM4EybbvaK46op" target="_blank">Stripe</a> |
             <a href="https://www.kmmpr.com/p/cryptopay.html" target="_blank">Crypto</a>
           `;
-          document.getElementById('invoiceBox').innerHTML = html;
+          document.getElementById('invoiceBox').innerHTML = invoiceHtml;
+          document.getElementById('downloadArea').style.display = 'block';
         }
       })
       .catch(() => {
         document.getElementById('invoiceBox').innerHTML = '<h2 style="color:red;">Error loading invoice.</h2>';
       });
+
+    async function downloadInvoicePDF() {
+      const { jsPDF } = window.jspdf;
+      const box = document.getElementById('invoiceBox');
+      const canvas = await html2canvas(box, { scale: 2 });
+
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgData = canvas.toDataURL('image/png');
+      const imgProps = pdf.getImageProperties(imgData);
+      const pdfWidth = pdf.internal.pageSize.getWidth();
+      const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+
+      pdf.addImage(imgData, 'PNG', 0, 10, pdfWidth, pdfHeight);
+      pdf.save('invoice.pdf');
+    }
   </script>
 </body>
 </html>
