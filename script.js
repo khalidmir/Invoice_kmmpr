@@ -157,16 +157,12 @@ function generateInvoice() {
         return;
     }
     
-// Generate invoice number (format: KM-MMDD-HHMM)
-const date = new Date();
-const month = String(date.getMonth() + 1).padStart(2, '0');
-const day = String(date.getDate()).padStart(2, '0');
-const hours = String(date.getHours()).padStart(2, '0');
-const minutes = String(date.getMinutes()).padStart(2, '0');
-const invoiceNumber = `KM-${month}${day}-${hours}${minutes}`;
-
-// Inject TRN above invoice number
-document.getElementById('invoiceTRN').textContent = 'UAE–TRN: 104052342300003';
+    // Generate invoice number (format: KM-MMDD-XXX)
+    const date = new Date();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const randomSuffix = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    const invoiceNumber = `KM-${month}${day}-${randomSuffix}`;
     
     // Format date
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -178,7 +174,6 @@ document.getElementById('invoiceTRN').textContent = 'UAE–TRN: 104052342300003'
     const currencySymbol = currencySymbols[currencyCode] || currencyCode;
     
     // Update invoice preview
-    document.getElementById('invoiceTRN').textContent = 'UAE-TRN: 104052342300003';
     document.getElementById('invoiceNumber').textContent = invoiceNumber;
     document.getElementById('invoiceDate').textContent = formattedDate;
     document.getElementById('previewClientName').textContent = document.getElementById('clientName').value;
@@ -338,7 +333,6 @@ function downloadPdf() {
     });
     
     // Get invoice data
-    const invoiceTRN = 'UAE-TRN: 104052342300003'; // TRN above Invoice #
     const invoiceNumber = document.getElementById('invoiceNumber').textContent;
     const invoiceDate = document.getElementById('invoiceDate').textContent;
     const clientName = document.getElementById('clientName').value;
@@ -359,25 +353,21 @@ function downloadPdf() {
     pdf.setFontSize(20);
     pdf.setTextColor(0, 51, 102); // Dark blue
     
-    // Add logo to top-right corner from a URL
-const logoUrl = 'https://i.imgur.com/yeS9ZKJ.png';
-
-const img = new Image();
-img.crossOrigin = 'Anonymous'; // prevent CORS issues
-const logoUrl = 'https://i.imgur.com/yeS9ZKJ.png';
-img.src = logoUrl;
-
-img.onload = function () {
-  pdf.addImage(img, 'PNG', 150, 10, 40, 40); // top-right
-};
+    // Add logo to top-right corner
+    try {
+        const logoImg = new Image();
+        logoImg.src = 'img/logo.png';
+        pdf.addImage(logoImg, 'PNG', 150, 10, 40, 40);
+    } catch (error) {
+        console.error('Error adding logo:', error);
+    }
     
     // Add company name
     pdf.text('KM MARKETING & PR', 20, 30);
     
-    /// Add invoice details
+    // Add invoice details
     pdf.setFontSize(10);
     pdf.setTextColor(0, 0, 0); // Black
-    pdf.text(`TRN: UAE–TRN: 104052342300003`, 20, 35); 
     pdf.text(`Invoice #: ${invoiceNumber}`, 20, 40);
     pdf.text(`Date: ${invoiceDate}`, 20, 45);
     
