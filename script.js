@@ -166,7 +166,7 @@ const minutes = String(date.getMinutes()).padStart(2, '0');
 const invoiceNumber = `KM-${month}${day}-${hours}${minutes}`;
 
 // Inject TRN above invoice number
-document.getElementById('invoiceTRN').textContent = 'UAE-TRN: 104052342300003';
+document.getElementById('invoiceTRN').textContent = 'UAE–TRN: 104052342300003';
     
     // Format date
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -360,14 +360,15 @@ function downloadPdf() {
     pdf.setTextColor(0, 51, 102); // Dark blue
     
     // Add logo to top-right corner from a URL
-const logoUrl = 'https://drive.google.com/uc?export=view&id=10WLw6z5p7xZcDGefC9CCyIcXlwnLT3uB';
+const logoUrl = 'https://i.imgur.com/yeS9ZKJ.png';
 
 const img = new Image();
 img.crossOrigin = 'Anonymous'; // prevent CORS issues
+const logoUrl = 'https://i.imgur.com/yeS9ZKJ.png';
 img.src = logoUrl;
 
 img.onload = function () {
-    pdf.addImage(img, 'PNG', 150, 10, 40, 40); // top-right
+  pdf.addImage(img, 'PNG', 150, 10, 40, 40); // top-right
 };
     
     // Add company name
@@ -376,7 +377,7 @@ img.onload = function () {
     /// Add invoice details
     pdf.setFontSize(10);
     pdf.setTextColor(0, 0, 0); // Black
-    pdf.text('UAE-TRN: 104052342300003', 20, 35); // 
+    pdf.text(`TRN: UAE–TRN: 104052342300003`, 20, 35); 
     pdf.text(`Invoice #: ${invoiceNumber}`, 20, 40);
     pdf.text(`Date: ${invoiceDate}`, 20, 45);
     
