@@ -25,12 +25,18 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('saveToGoogleSheet').addEventListener('click', saveToGoogleSheet);
     
     // Add event listeners for calculation
-document.getElementById('itemsContainer').addEventListener('input', function (e) {
+ddocument.getElementById('itemsContainer').addEventListener('input', function (e) {
     if (
         e.target.classList.contains('item-quantity') ||
         e.target.classList.contains('item-price')
     ) {
-        calculateItemTotal(e);
+        const row = e.target.closest('.item-row');
+        const quantity = parseFloat(row.querySelector('.item-quantity').value) || 0;
+        const price = parseFloat(row.querySelector('.item-price').value) || 0;
+        const total = quantity * price;
+        row.querySelector('.item-total').value = total.toFixed(2);
+
+        calculateTotals(); // Also update all totals
     }
 });
 document.getElementById('vatPercent').addEventListener('input', calculateTotals);
