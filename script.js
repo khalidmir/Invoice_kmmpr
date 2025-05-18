@@ -353,14 +353,6 @@ function downloadPdf() {
     pdf.setFontSize(20);
     pdf.setTextColor(0, 51, 102); // Dark blue
     
-    // Add logo to top-right corner
-    try {
-        const logoImg = new Image();
-        logoImg.src = 'img/logo.png';
-        pdf.addImage(logoImg, 'PNG', 150, 10, 40, 40);
-    } catch (error) {
-        console.error('Error adding logo:', error);
-    }
     
     // Add company name
     pdf.text('KM MARKETING & PR', 20, 30);
