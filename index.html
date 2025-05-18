@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KM MARKETING & PR - Invoice Generator</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+    <script src="https://apis.google.com/js/api.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Invoice Generator</h1>
+            <p>KM MARKETING & PR</p>
+        </header>
+
+        <main>
+            <section class="form-container">
+                <form id="invoiceForm">
+                    <div class="form-section">
+                        <h2>Provider & Client Information</h2>
+                        
+                        <div class="form-group">
+                            <label for="providerName">Service Provider Name (Internal Use Only)</label>
+                            <input type="text" id="providerName" name="providerName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="clientName">Client Name (Required)</label>
+                            <input type="text" id="clientName" name="clientName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="companyName">Company Name (Optional)</label>
+                            <input type="text" id="companyName" name="companyName">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="address">Address (Optional)</label>
+                            <textarea id="address" name="address" rows="3"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="taxId">VAT/TAX ID (Optional)</label>
+                            <input type="text" id="taxId" name="taxId">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="currency">Currency</label>
+                            <select id="currency" name="currency" required>
+                                <option value="USD">USD - US Dollar</option>
+                                <option value="EUR">EUR - Euro</option>
+                                <option value="GBP">GBP - British Pound</option>
+                                <option value="AED">AED - UAE Dirham</option>
+                                <option value="PKR">PKR - Pakistani Rupee</option>
+                                <option value="INR">INR - Indian Rupee</option>
+                                <option value="AUD">AUD - Australian Dollar</option>
+                                <option value="CAD">CAD - Canadian Dollar</option>
+                                <option value="MYR">MYR - Malaysian Ringgit</option>
+                                <option value="SGD">SGD - Singapore Dollar</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="clientEmail">Client Email</label>
+                            <input type="email" id="clientEmail" name="clientEmail" required>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h2>Invoice Items</h2>
+                        
+                        <div id="itemsContainer">
+                            <div class="item-row">
+                                <div class="form-group">
+                                    <label for="itemDescription1">Description</label>
+                                    <input type="text" id="itemDescription1" name="itemDescription1" class="item-description" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="itemQuantity1">Quantity</label>
+                                    <input type="number" id="itemQuantity1" name="itemQuantity1" class="item-quantity" min="1" value="1" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="itemPrice1">Unit Price</label>
+                                    <input type="number" id="itemPrice1" name="itemPrice1" class="item-price" min="0" step="0.01" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="itemTotal1">Total</label>
+                                    <input type="number" id="itemTotal1" name="itemTotal1" class="item-total" readonly>
+                                </div>
+                                
+                                <button type="button" class="remove-item" disabled>Remove</button>
+                            </div>
+                        </div>
+                        
+                        <button type="button" id="addItem">Add Item</button>
+                    </div>
+
+                    <div class="form-section">
+                        <h2>Additional Charges</h2>
+                        
+                        <div class="form-group">
+                            <label for="vatPercent">VAT/TAX % (Optional)</label>
+                            <input type="number" id="vatPercent" name="vatPercent" min="0" max="100" step="0.01">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="otherCharges">Other Charges (Optional)</label>
+                            <input type="number" id="otherCharges" name="otherCharges" min="0" step="0.01">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="note">Note/Comment (Optional)</label>
+                            <textarea id="note" name="note" rows="3"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-section total-section">
+                        <div class="form-group">
+                            <label for="subtotal">Subtotal:</label>
+                            <input type="number" id="subtotal" name="subtotal" readonly>
+                        </div>
+                        
+                        <div class="form-group" id="vatAmountGroup">
+                            <label for="vatAmount">VAT/TAX Amount:</label>
+                            <input type="number" id="vatAmount" name="vatAmount" readonly>
+                        </div>
+                        
+                        <div class="form-group" id="otherChargesGroup">
+                            <label for="otherChargesAmount">Other Charges:</label>
+                            <input type="number" id="otherChargesAmount" name="otherChargesAmount" readonly>
+                        </div>
+                        
+                        <div class="form-group total-amount">
+                            <label for="totalAmount">Total Invoice Amount:</label>
+                            <input type="number" id="totalAmount" name="totalAmount" readonly>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" id="generateInvoice">Generate Invoice</button>
+                        <button type="reset">Reset Form</button>
+                    </div>
+                </form>
+            </section>
+
+            <section id="invoicePreview" class="hidden">
+                <div class="preview-container">
+                    <div id="invoiceTemplate">
+                        <div class="invoice-header">
+                            <div class="company-info">
+                                <h2>KM MARKETING & PR</h2>
+                                <p>Invoice #: <span id="invoiceNumber"></span></p>
+                                <p>Date: <span id="invoiceDate"></span></p>
+                            </div>
+                            <div class="logo-container">
+                                <img src="img/logo.png" alt="KM Marketing & PR Logo">
+                            </div>
+                        </div>
+
+                        <div class="invoice-addresses">
+                            <div class="invoice-from">
+                                <h3>Invoice From:</h3>
+                                <p>Kreative Minds</p>
+                            </div>
+                            
+                            <div class="invoice-to">
+                                <h3>Invoice To:</h3>
+                                <p id="previewClientName"></p>
+                                <p id="previewCompanyName"></p>
+                                <p id="previewAddress"></p>
+                                <p id="previewTaxId"></p>
+                            </div>
+                        </div>
+
+                        <div class="invoice-items">
+                            <table id="itemsTable">
+                                <thead>
+                                    <tr>
+                                        <th>Description</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Price</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="itemsTableBody">
+                                    <!-- Items will be added here dynamically -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="invoice-summary">
+                            <div class="summary-item">
+                                <span>Subtotal:</span>
+                                <span id="previewSubtotal"></span>
+                            </div>
+                            
+                            <div class="summary-item" id="previewVatRow">
+                                <span>VAT/TAX (<span id="previewVatPercent"></span>%):</span>
+                                <span id="previewVatAmount"></span>
+                            </div>
+                            
+                            <div class="summary-item" id="previewOtherChargesRow">
+                                <span>Other Charges:</span>
+                                <span id="previewOtherCharges"></span>
+                            </div>
+                            
+                            <div class="summary-item total">
+                                <span>Total:</span>
+                                <span id="previewTotalAmount"></span>
+                            </div>
+                        </div>
+
+                        <div class="invoice-notes" id="previewNoteContainer">
+                            <h3>Notes:</h3>
+                            <p id="previewNote"></p>
+                        </div>
+                        
+                        <div class="invoice-footer">
+                            <p>Thanks for your business with us. If you have any query, contact us at: info@kmmpr.com</p>
+                        </div>
+                    </div>
+
+                    <div class="pdf-payment-section">
+                        <h3>Payment Options</h3>
+                        
+                        <div class="pdf-payment-buttons">
+                            <a href="https://www.paypal.com/ncp/payment/KK3BF7GUY4DHS" id="paypalLink" class="pdf-payment-button paypal" target="_blank">Pay with PayPal</a>
+                            <a href="https://pay.kmmpr.com/b/4gw2bM4EybbvaK46op" class="pdf-payment-button stripe" target="_blank">Pay with Stripe</a>
+                            <a href="https://www.kmmpr.com/p/cryptopay.html" class="pdf-payment-button crypto" target="_blank">Pay with Crypto</a>
+                        </div>
+                        
+                        <div class="pdf-bank-details">
+                            <h4>Bank Transfer Details:</h4>
+                            <table class="pdf-bank-details-table">
+                                <tr>
+                                    <td>Account Title:</td>
+                                    <td>KM MARKETING AND PR</td>
+                                </tr>
+                                <tr>
+                                    <td>IBAN:</td>
+                                    <td>AE510400000253369586003</td>
+                                </tr>
+                                <tr>
+                                    <td>Bank:</td>
+                                    <td>RAK BANK UAE</td>
+                                </tr>
+                                <tr>
+                                    <td>SWIFT Code:</td>
+                                    <td>NRAKAEAK</td>
+                                </tr>
+                            </table>
+                        </div>
+                        
+                        <div class="pdf-crypto-details">
+                            <h4>Crypto USDT (TRC20) Wallet:</h4>
+                            <p>TVRStYqh3ANVqmng61bhQyH6gHFLkzJAXP</p>
+                        </div>
+                        
+                        <div class="invoice-footer">
+                            <p>Thanks for your business with us. If you have any query, contact us at: info@kmmpr.com</p>
+                        </div>
+                    </div>
+
+                    <div class="preview-actions">
+                        <button id="downloadPdf">Download PDF</button>
+                        <button id="sendEmail">Send to Client</button>
+                        <button id="shareInvoice">Share Link</button>
+                        <button id="saveToGoogleSheet">Save to Google Sheet</button>
+                        <button id="backToForm">Back to Form</button>
+                    </div>
+                    
+                    <div class="status-messages">
+                        <div id="emailStatus" class="status-message"></div>
+                        <div id="shareStatus" class="status-message"></div>
+                        <div id="sheetStatus" class="status-message"></div>
+                        <input type="text" id="shareableLink" class="shareable-link" readonly style="display: none;">
+                        <button id="copyLink" onclick="copyLinkToClipboard()" style="display: none;">Copy Link</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 KM MARKETING & PR. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html>

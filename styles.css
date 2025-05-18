@@ -1,0 +1,585 @@
+/* Global Styles */
+:root {
+    --primary-color: #003366;
+    --secondary-color: #f8f9fa;
+    --accent-color: #0056b3;
+    --text-color: #333;
+    --dark-gray: #444444;
+    --border-color: #ddd;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+    --danger-color: #dc3545;
+    --paypal-color: #003087;
+    --stripe-color: #4B0082;
+    --crypto-color: #228B22;
+    --shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    --border-radius: 4px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: #f5f7fa;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Header Styles */
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+header h1 {
+    color: var(--dark-gray);
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+header p {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+/* Logo Styles */
+.logo-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.logo-container img {
+    max-width: 150px;
+    height: auto;
+}
+
+.company-details {
+    text-align: right;
+}
+
+/* Form Styles */
+.form-container {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+.form-section {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.form-section:last-child {
+    border-bottom: none;
+}
+
+.form-section h2 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 2px rgba(0, 86, 179, 0.2);
+}
+
+.form-group input[readonly] {
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+}
+
+/* Item Row Styles */
+.item-row {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 1fr auto;
+    gap: 10px;
+    align-items: end;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed var(--border-color);
+}
+
+.item-row:last-child {
+    border-bottom: none;
+}
+
+.remove-item {
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 8px 12px;
+    cursor: pointer;
+    height: 40px;
+}
+
+.remove-item:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Total Section Styles */
+.total-section {
+    background-color: var(--secondary-color);
+    padding: 20px;
+    border-radius: var(--border-radius);
+}
+
+.total-amount {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 2px solid var(--border-color);
+}
+
+/* Button Styles */
+button {
+    padding: 12px 20px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: var(--accent-color);
+}
+
+button[type="reset"] {
+    background-color: #6c757d;
+    margin-left: 10px;
+}
+
+button[type="reset"]:hover {
+    background-color: #5a6268;
+}
+
+#addItem {
+    background-color: var(--success-color);
+    margin-top: 10px;
+}
+
+#addItem:hover {
+    background-color: #218838;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+/* Invoice Preview Styles */
+.hidden {
+    display: none;
+}
+
+.preview-container {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow);
+    padding: 30px;
+    margin-bottom: 30px;
+}
+
+#invoiceTemplate {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 30px;
+    border: 1px solid var(--border-color);
+    background-color: white;
+}
+
+.invoice-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.company-info h2 {
+    color: var(--primary-color);
+    font-size: 1.8rem;
+    margin-bottom: 10px;
+}
+
+.invoice-addresses {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+}
+
+.invoice-from, .invoice-to {
+    width: 48%;
+}
+
+.invoice-from h3, .invoice-to h3 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.invoice-to p {
+    font-weight: bold;
+    font-size: 12pt;
+}
+
+.invoice-items {
+    margin-bottom: 30px;
+}
+
+.invoice-items table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.invoice-items th, .invoice-items td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.invoice-items th {
+    background-color: var(--secondary-color);
+    font-weight: 600;
+}
+
+.invoice-summary {
+    margin-left: auto;
+    width: 300px;
+    margin-bottom: 30px;
+}
+
+.summary-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 0;
+}
+
+.summary-item.total {
+    font-weight: bold;
+    font-size: 1.2rem;
+    border-top: 2px solid var(--border-color);
+    padding-top: 10px;
+    margin-top: 5px;
+}
+
+.invoice-notes {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
+
+.invoice-notes h3 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    font-size: 1.2rem;
+}
+
+.invoice-footer {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+    font-style: italic;
+    color: #666;
+}
+
+/* Payment Options Styles */
+.payment-options {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 2px solid var(--border-color);
+    text-align: center;
+}
+
+.payment-options h3 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    text-align: center;
+    font-size: 1.5rem;
+}
+
+.payment-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 30px;
+    gap: 20px;
+}
+
+.payment-button {
+    display: block;
+    padding: 15px 20px;
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    width: 200px;
+    transition: opacity 0.3s;
+}
+
+.payment-button:hover {
+    opacity: 0.9;
+}
+
+.payment-button.paypal {
+    background-color: var(--paypal-color);
+}
+
+.payment-button.stripe {
+    background-color: var(--stripe-color);
+}
+
+.payment-button.crypto {
+    background-color: var(--crypto-color);
+}
+
+.bank-details, .crypto-details {
+    margin: 0 auto;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: var(--secondary-color);
+    border-radius: var(--border-radius);
+    max-width: 600px;
+}
+
+.bank-details h4, .crypto-details h4 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+.bank-details table {
+    width: 100%;
+}
+
+.bank-details td {
+    padding: 5px 0;
+}
+
+.bank-details td:first-child {
+    font-weight: 600;
+    width: 30%;
+}
+
+.preview-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+/* Status Messages Styles */
+.status-messages {
+    margin-top: 20px;
+}
+
+.status-message {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: var(--border-radius);
+    display: none;
+}
+
+.success-message {
+    background-color: rgba(40, 167, 69, 0.2);
+    border: 1px solid var(--success-color);
+    color: #155724;
+}
+
+.error-message {
+    background-color: rgba(220, 53, 69, 0.2);
+    border: 1px solid var(--danger-color);
+    color: #721c24;
+}
+
+.shareable-link {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+}
+
+#copyLink {
+    background-color: var(--accent-color);
+    margin-bottom: 15px;
+}
+
+/* Footer Styles */
+footer {
+    text-align: center;
+    padding: 20px 0;
+    color: #666;
+    font-size: 0.9rem;
+}
+
+/* PDF Payment Options Styles */
+.pdf-payment-section {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.pdf-payment-section h3 {
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+.pdf-payment-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+    gap: 10px; /* Reduced gap between buttons */
+}
+
+.pdf-payment-button {
+    display: block;
+    padding: 12px 15px; /* Reduced padding */
+    text-align: center;
+    text-decoration: none;
+    color: white;
+    border-radius: var(--border-radius);
+    font-weight: 600;
+    width: 180px; /* Reduced width */
+    font-size: 0.95rem; /* Slightly smaller font */
+}
+
+.pdf-payment-button.paypal {
+    background-color: var(--paypal-color);
+}
+
+.pdf-payment-button.stripe {
+    background-color: var(--stripe-color);
+}
+
+.pdf-payment-button.crypto {
+    background-color: var(--crypto-color);
+}
+
+.pdf-bank-details {
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: var(--border-radius);
+    max-width: 600px;
+    text-align: left;
+}
+
+.pdf-bank-details h4 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.pdf-bank-details-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.pdf-bank-details-table td {
+    padding: 5px 10px;
+}
+
+.pdf-bank-details-table td:first-child {
+    font-weight: 600;
+    width: 40%;
+    text-align: right;
+}
+
+.pdf-crypto-details {
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: var(--border-radius);
+    max-width: 600px;
+    text-align: center;
+}
+
+.pdf-crypto-details h4 {
+    color: var(--primary-color);
+    margin-bottom: 10px;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .item-row {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .invoice-addresses {
+        flex-direction: column;
+    }
+    
+    .invoice-from, .invoice-to {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    
+    .payment-buttons {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .payment-button {
+        width: 100%;
+        max-width: 300px;
+    }
+    
+    .preview-actions {
+        flex-direction: column;
+    }
+    
+    .invoice-summary {
+        width: 100%;
+    }
+}
