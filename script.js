@@ -681,27 +681,29 @@ function sendInvoiceEmail(isAutomatic = false) {
     });
 }
 
-// Function to share invoice link
+// Function to share invoice link (Google Sheets integration)
 function shareInvoice() {
-    // Generate a unique link ID
     const linkId = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    
-    // Get invoice data
     const invoiceData = JSON.parse(localStorage.getItem('lastInvoiceData'));
-    
-    // Store invoice data with link ID
-    localStorage.setItem(`invoice_${linkId}`, JSON.stringify(invoiceData));
-    
-    // Generate shareable link
+
+    // Send to Google Sheet using Apps Script Web App
+    fetch('https://script.google.com/macros/s/AKfycbzcoo8h1wWGg3dLFiJUJd3PVVCt-sqW5pkFpisy3c-xfHeT2s9k-tC5PPE9-_iMGlyl/exec', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: linkId, json: invoiceData })
+    });
+
+    // Generate and display shareable link
     const shareableLink = `${window.location.origin}/view.html?id=${linkId}`;
-    
-    // Show link to user
     const shareableLinkElement = document.getElementById('shareableLink');
     shareableLinkElement.value = shareableLink;
     shareableLinkElement.style.display = 'block';
-    
-    // Show copy button
     document.getElementById('copyLink').style.display = 'inline-block';
+
+    document.getElementById('shareStatus').textContent = 'Invoice link saved and generated successfully!';
+    document.getElementById('shareStatus').className = 'status-message success-message';
+    document.getElementById('shareStatus').style.display = 'block';
+}
     
     // Show share status
     document.getElementById('shareStatus').textContent = 'Invoice link generated successfully. Copy and share with your client.';
