@@ -559,7 +559,9 @@ pdf.text('104052342300003', 105, trnY + 8, { align: 'center' });
     pdf.text('Thanks for your business with us. If you have any query, contact us at: info@kmmpr.com', 105, thankY, { align: 'center' });
     
     // Download PDF
-    pdf.save(`Invoice_${invoiceNumber}.pdf`);
+pdf.output('dataurlnewwindow'); // Opens PDF in new tab
+// OR
+window.open(pdf.output('bloburl')); // Safe for download link
 }
 
 // Function to send invoice email
