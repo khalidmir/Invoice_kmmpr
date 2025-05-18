@@ -1,132 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
   <title>Invoice Viewer | KM MARKETING & PR</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: Arial;
       background: #f9f9f9;
-      color: #002b5c;
-      display: flex;
-      justify-content: center;
-      padding: 40px;
+      padding: 2rem;
+      text-align: center;
     }
-    .card {
-      background: white;
-      border-radius: 20px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    .invoice-box {
       max-width: 600px;
-      width: 100%;
-      padding: 30px;
+      margin: auto;
+      background: #fff;
+      padding: 2rem;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      border-radius: 10px;
     }
-    h1, h2, h3 {
-      color: #002b5c;
-    }
-    .section {
-      margin-bottom: 24px;
+    h2 {
+      color: #003366;
     }
     .label {
-      font-weight: 600;
-    }
-    .value {
-      margin-left: 8px;
-    }
-    .items ul {
-      padding-left: 20px;
-    }
-    .button-group a {
-      display: inline-block;
-      padding: 10px 18px;
-      border-radius: 8px;
-      margin: 10px 8px 0 0;
-      color: white;
       font-weight: bold;
-      text-decoration: none;
     }
-    .paypal { background-color: #003087; }
-    .stripe { background-color: #635bff; }
-    .crypto { background-color: #228b22; }
-    .bank, .crypto-wallet {
-      font-size: 0.9em;
-      line-height: 1.6;
-      background: #f0f0f0;
-      padding: 12px;
-      border-radius: 8px;
-      margin-top: 10px;
-    }
-    .center { text-align: center; margin-top: 30px; font-size: 0.85em; color: #555; }
   </style>
 </head>
 <body>
-  <div class="card">
-    <div class="section">
-      <h1>Invoice Preview</h1>
-      <p><span class="label">Invoice #:</span> <strong id="invoiceNumber">KM-XXXX-123</strong></p>
-      <p><span class="label">Date:</span> <span id="invoiceDate">May 18, 2025</span></p>
-      <p><span class="label">Client:</span> <span id="clientName">Client Name</span></p>
-      <p><span class="label">Company:</span> <span id="companyName">Company Name</span></p>
-      <p><span class="label">Total:</span> <span id="totalAmount">USD 100.00</span></p>
-    </div>
-
-    <div class="section items">
-      <h3>Items:</h3>
-      <ul id="itemList">
-        <li>Service 1 – 2 x 50 = 100.00</li>
-      </ul>
-      <p><span class="label">Note:</span> <span id="invoiceNote">Thank you for your business.</span></p>
-    </div>
-
-    <div class="section button-group">
-      <a class="paypal" target="_blank" id="paypalBtn">Pay with PayPal</a>
-      <a class="stripe" href="https://pay.kmmpr.com/b/4gw2bM4EybbvaK46op" target="_blank">Pay with Stripe</a>
-      <a class="crypto" href="https://www.kmmpr.com/p/cryptopay.html" target="_blank">Pay with Crypto</a>
-    </div>
-
-    <div class="section bank">
-      <strong>Bank Transfer Details:</strong><br>
-      Account Title: KM MARKETING AND PR<br>
-      IBAN: AE510400000253369586003<br>
-      Bank: RAK BANK UAE<br>
-      SWIFT Code: NRAKAEAK
-    </div>
-
-    <div class="section crypto-wallet">
-      <strong>Crypto USDT (TRC20) Wallet:</strong><br>
-      TVRStYqh3ANVqmng61bhQyH6gHFLkzJAXP
-    </div>
-
-    <div class="section center">
-      UAE TRN/VAT: 104052342300003<br>
-      Contact: info@kmmpr.com
-    </div>
-  </div>
+  <div class="invoice-box" id="invoiceBox">Loading...</div>
 
   <script>
-    // Inject dynamic values (simulate localStorage logic)
-    const data = JSON.parse(localStorage.getItem('lastInvoiceData') || '{}');
-    if (data.invoiceNumber) {
-      document.getElementById('invoiceNumber').textContent = data.invoiceNumber;
-      document.getElementById('invoiceDate').textContent = data.invoiceDate;
-      document.getElementById('clientName').textContent = data.clientName;
-      document.getElementById('companyName').textContent = data.companyName || 'N/A';
-      document.getElementById('totalAmount').textContent = `${data.currency} ${parseFloat(data.totalAmount).toFixed(2)}`;
-      document.getElementById('invoiceNote').textContent = data.note || 'N/A';
+    const id = new URLSearchParams(window.location.search).get('id');
+    const apiUrl = 'https://script.google.com/macros/s/AKfycbzcoo8h1wWGg3dLFiJUJd3PVVCt-sqW5pkFpisy3c-xfHeT2s9k-tC5PPE9-_iMGlyl/exec?id=' + id;
 
-      const list = document.getElementById('itemList');
-      list.innerHTML = '';
-      data.items.forEach(item => {
-        const li = document.createElement('li');
-        li.textContent = `${item.description} – ${item.quantity} x ${item.price} = ${item.total}`;
-        list.appendChild(li);
+    fetch(apiUrl)
+      .then(res => res.json())
+      .then(data => {
+        if (data.error) {
+          document.getElementById('invoiceBox').innerHTML = '<h2 style="color:red;">Invoice not found or expired.</h2>';
+        } else {
+          const html = `
+            <h2>Invoice Preview</h2>
+            <p><span class="label">Invoice #:</span> <strong>${data.invoiceNumber}</strong></p>
+            <p><span class="label">Date:</span> ${data.invoiceDate}</p>
+            <p><span class="label">Client:</span> ${data.clientName}</p>
+            <p><span class="label">Company:</span> ${data.companyName || 'N/A'}</p>
+            <p><span class="label">Total:</span> ${data.currency} ${data.totalAmount}</p>
+            <h3>Items:</h3>
+            <ul>
+              ${data.items.map(item => `<li>${item.description} – ${item.quantity} x ${item.price} = ${item.total}</li>`).join('')}
+            </ul>
+            <p><span class="label">Note:</span> ${data.note || 'N/A'}</p>
+            <hr />
+            <p><strong>Pay:</strong></p>
+            <a href="https://paypal.me/Kreativeuae/${data.totalAmount}" target="_blank">PayPal</a> |
+            <a href="https://pay.kmmpr.com/b/4gw2bM4EybbvaK46op" target="_blank">Stripe</a> |
+            <a href="https://www.kmmpr.com/p/cryptopay.html" target="_blank">Crypto</a>
+          `;
+          document.getElementById('invoiceBox').innerHTML = html;
+        }
+      })
+      .catch(() => {
+        document.getElementById('invoiceBox').innerHTML = '<h2 style="color:red;">Error loading invoice.</h2>';
       });
-
-      // Update PayPal link
-      const paypalLink = `https://paypal.me/Kreativeuae/${parseFloat(data.totalAmount).toFixed(2)}`;
-      document.getElementById('paypalBtn').href = paypalLink;
-    }
   </script>
 </body>
 </html>
