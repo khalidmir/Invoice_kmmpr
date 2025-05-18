@@ -538,19 +538,7 @@ function downloadPdf() {
     pdf.text('SWIFT Code:', bankDetailsX1, bankDetailsY, { align: 'right' });
     pdf.text('NRAKAEAK', bankDetailsX2, bankDetailsY);
     
-  // Add TRN /VAT detail
-    const trnY = bankDetailsY + 12;
-    pdf.setFontSize(11);
-    pdf.setTextColor(0, 51, 102); // Dark blue
-    pdf.text('UAE TRN/VAT:', 105, trnY, { align: 'center' });
-    
-    pdf.setFontSize(10);
-    pdf.setTextColor(0, 0, 0); // Black text
-    pdf.text('104052342300003', 105, trnY + 8, { align: 'center' });
-    
-    pdf.setFontSize(10);
-    pdf.setTextColor(0, 0, 0); // Black text
-    pdf.text('104052342300003', 105, trn + 8, { align: 'center' });
+<br>
     
     // Add thank you message
     const thankY = cryptoY + 20;
