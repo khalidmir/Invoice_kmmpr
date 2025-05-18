@@ -368,6 +368,7 @@ function downloadPdf() {
     // Add invoice details
     pdf.setFontSize(10);
     pdf.setTextColor(0, 0, 0); // Black
+    pdf.text('UAE–TRN: 104052342300003', 20, 35);
     pdf.text(`Invoice #: ${invoiceNumber}`, 20, 40);
     pdf.text(`Date: ${invoiceDate}`, 20, 45);
     
