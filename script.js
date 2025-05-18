@@ -15,7 +15,6 @@ const currencySymbols = {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
-    // Add event listeners
     document.getElementById('addItem').addEventListener('click', addItemRow);
     document.getElementById('generateInvoice').addEventListener('click', generateInvoice);
     document.getElementById('downloadPdf').addEventListener('click', downloadPdf);
@@ -23,34 +22,38 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('backToForm').addEventListener('click', backToForm);
     document.getElementById('shareInvoice').addEventListener('click', shareInvoice);
     document.getElementById('saveToGoogleSheet').addEventListener('click', saveToGoogleSheet);
-    
-    // Add event listeners for calculation
-document.getElementById('itemsContainer').addEventListener('input', function (e) {
-    if (
-        e.target.classList.contains('item-quantity') ||
-        e.target.classList.contains('item-price')
-    ) {
+
+    document.getElementById('itemsContainer').addEventListener('input', function (e) {
+        if (
+            e.target.classList.contains('item-quantity') ||
+            e.target.classList.contains('item-price')
+        ) {
+            const row = e.target.closest('.item-row');
+            const quantity = parseFloat(row.querySelector('.item-quantity').value) || 0;
+            const price = parseFloat(row.querySelector('.item-price').value) || 0;
+            const total = quantity * price;
+            row.querySelector('.item-total').value = total.toFixed(2);
+            calculateTotals();
+        }
+    });
+
+    document.getElementById('vatPercent').addEventListener('input', calculateTotals);
+    document.getElementById('otherCharges').addEventListener('input', calculateTotals);
+
+    // Trigger calculation on load
+    const firstQtyInput = document.querySelector('.item-quantity');
+    if (firstQtyInput) {
+        const e = { target: firstQtyInput };
         const row = e.target.closest('.item-row');
         const quantity = parseFloat(row.querySelector('.item-quantity').value) || 0;
         const price = parseFloat(row.querySelector('.item-price').value) || 0;
         const total = quantity * price;
         row.querySelector('.item-total').value = total.toFixed(2);
-
-        calculateTotals(); // Also update all totals
+        calculateTotals();
     }
-});
-document.getElementById('vatPercent').addEventListener('input', calculateTotals);
-document.getElementById('otherCharges').addEventListener('input', calculateTotals);
 
-// Trigger calculation on load
-const firstQtyInput = document.querySelector('.item-quantity');
-if (firstQtyInput) {
-    calculateItemTotal({ target: firstQtyInput });
-}
-    
-    // Initialize EmailJS
     (function() {
-        emailjs.init("ogf8HZEgEbz9STCYi"); // EmailJS Public Key
+        emailjs.init("ogf8HZEgEbz9STCYi");
     })();
 });
 
