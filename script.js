@@ -338,6 +338,7 @@ function downloadPdf() {
     });
     
     // Get invoice data
+    const invoiceTRN = 'UAE-TRN: 104052342300003'; // TRN above Invoice #
     const invoiceNumber = document.getElementById('invoiceNumber').textContent;
     const invoiceDate = document.getElementById('invoiceDate').textContent;
     const clientName = document.getElementById('clientName').value;
@@ -358,21 +359,24 @@ function downloadPdf() {
     pdf.setFontSize(20);
     pdf.setTextColor(0, 51, 102); // Dark blue
     
-    // Add logo to top-right corner
-    try {
-        const logoImg = new Image();
-        logoImg.src = 'img/logo.png';
-        pdf.addImage(logoImg, 'PNG', 150, 10, 40, 40);
-    } catch (error) {
-        console.error('Error adding logo:', error);
-    }
+    // Add logo to top-right corner from a URL
+const logoUrl = 'https://drive.google.com/uc?export=view&id=10WLw6z5p7xZcDGefC9CCyIcXlwnLT3uB';
+
+const img = new Image();
+img.crossOrigin = 'Anonymous'; // prevent CORS issues
+img.src = logoUrl;
+
+img.onload = function () {
+    pdf.addImage(img, 'PNG', 150, 10, 40, 40); // top-right
+};
     
     // Add company name
     pdf.text('KM MARKETING & PR', 20, 30);
     
-    // Add invoice details
+    /// Add invoice details
     pdf.setFontSize(10);
     pdf.setTextColor(0, 0, 0); // Black
+    pdf.text('UAE-TRN: 104052342300003', 20, 35); // 
     pdf.text(`Invoice #: ${invoiceNumber}`, 20, 40);
     pdf.text(`Date: ${invoiceDate}`, 20, 45);
     
