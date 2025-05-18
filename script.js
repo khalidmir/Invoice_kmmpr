@@ -25,23 +25,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('saveToGoogleSheet').addEventListener('click', saveToGoogleSheet);
     
     // Add event listeners for calculation
-document.getElementById('itemsContainer').addEventListener('input', function (e) {
-  if (
-    e.target.classList.contains('item-quantity') ||
-    e.target.classList.contains('item-price')
-  ) {
-    const row = e.target.closest('.item-row');
-    const quantity = parseFloat(row.querySelector('.item-quantity').value) || 0;
-    const price = parseFloat(row.querySelector('.item-price').value) || 0;
-    const total = quantity * price;
-    row.querySelector('.item-total').value = total.toFixed(2);
-    
-    // Optional: update grand totals if needed
-    if (typeof calculateTotals === 'function') {
-      calculateTotals();
-    }
-  }
-});
+    document.getElementById('itemsContainer').addEventListener('input', calculateItemTotal);
+    document.getElementById('vatPercent').addEventListener('input', calculateTotals);
+    document.getElementById('otherCharges').addEventListener('input', calculateTotals);
     
     // Initialize EmailJS
     (function() {
