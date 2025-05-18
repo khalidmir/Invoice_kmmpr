@@ -342,8 +342,8 @@ function downloadPdf() {
     const companyName = document.getElementById('companyName').value || '';
     const address = document.getElementById('address').value || '';
     const taxId = document.getElementById('taxId').value || '';
-    
-    // Get currency and amounts
+    const trn = document.getElementById('invoiceTRN')?.textContent || 'UAE-TRN: 104052342300003';
+
     const currencySelect = document.getElementById('currency');
     const currencyCode = currencySelect.value;
     const currencySymbol = currencySymbols[currencyCode] || currencyCode;
@@ -351,31 +351,18 @@ function downloadPdf() {
     const vatPercent = parseFloat(document.getElementById('vatPercent').value) || 0;
     const vatAmount = parseFloat(document.getElementById('vatAmount').value);
     const totalAmount = parseFloat(document.getElementById('totalAmount').value);
-    
-    // Set up PDF
+
     pdf.setFontSize(20);
-    pdf.setTextColor(0, 51, 102); // Dark blue
-    
-    // Add logo to top-right corner
-    try {
-        const logoImg = new Image();
-        logoImg.src = 'img/logo.png';
-        pdf.addImage(logoImg, 'PNG', 150, 10, 40, 40);
-    } catch (error) {
-        console.error('Error adding logo:', error);
-    }
-    
-    // Add company name
+    pdf.setTextColor(0, 51, 102);
     pdf.text('KM MARKETING & PR', 20, 30);
-    
-    // Add invoice details
+
+    // TRN above Invoice Number
     pdf.setFontSize(10);
-    pdf.setTextColor(0, 0, 0); // Black
-    pdf.text(`Invoice #: ${invoiceNumber}`, 20, 40);
-    pdf.text(`Date: ${invoiceDate}`, 20, 45);
-    
-    // Add invoice from section
-    pdf.setFontSize(10);
+    pdf.setTextColor(0, 0, 0);
+    pdf.text(trn, 20, 35);  // ← TRN shown above
+
+    pdf.text(`Invoice #: ${invoiceNumber}`, 20, 42);
+    pdf.text(`Date: ${invoiceDate}`, 20, 47);
     pdf.text('Invoice from: Kreative Minds', 20, 55);
     
     // Add invoice to section
