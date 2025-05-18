@@ -15,6 +15,7 @@ const currencySymbols = {
 
 // Initialize the application
 document.addEventListener('DOMContentLoaded', function() {
+    // Add event listeners
     document.getElementById('addItem').addEventListener('click', addItemRow);
     document.getElementById('generateInvoice').addEventListener('click', generateInvoice);
     document.getElementById('downloadPdf').addEventListener('click', downloadPdf);
@@ -22,38 +23,15 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('backToForm').addEventListener('click', backToForm);
     document.getElementById('shareInvoice').addEventListener('click', shareInvoice);
     document.getElementById('saveToGoogleSheet').addEventListener('click', saveToGoogleSheet);
-
-    document.getElementById('itemsContainer').addEventListener('input', function (e) {
-        if (
-            e.target.classList.contains('item-quantity') ||
-            e.target.classList.contains('item-price')
-        ) {
-            const row = e.target.closest('.item-row');
-            const quantity = parseFloat(row.querySelector('.item-quantity').value) || 0;
-            const price = parseFloat(row.querySelector('.item-price').value) || 0;
-            const total = quantity * price;
-            row.querySelector('.item-total').value = total.toFixed(2);
-            calculateTotals();
-        }
-    });
-
+    
+    // Add event listeners for calculation
+    document.getElementById('itemsContainer').addEventListener('input', calculateItemTotal);
     document.getElementById('vatPercent').addEventListener('input', calculateTotals);
     document.getElementById('otherCharges').addEventListener('input', calculateTotals);
-
-    // Trigger calculation on load
-    const firstQtyInput = document.querySelector('.item-quantity');
-    if (firstQtyInput) {
-        const e = { target: firstQtyInput };
-        const row = e.target.closest('.item-row');
-        const quantity = parseFloat(row.querySelector('.item-quantity').value) || 0;
-        const price = parseFloat(row.querySelector('.item-price').value) || 0;
-        const total = quantity * price;
-        row.querySelector('.item-total').value = total.toFixed(2);
-        calculateTotals();
-    }
-
+    
+    // Initialize EmailJS
     (function() {
-        emailjs.init("ogf8HZEgEbz9STCYi");
+        emailjs.init("ogf8HZEgEbz9STCYi"); // EmailJS Public Key
     })();
 });
 
@@ -179,15 +157,12 @@ function generateInvoice() {
         return;
     }
     
-    function generateInvoice() {
-    // Generate invoice number (format: KM-MMDD-HHMM)
+    // Generate invoice number (format: KM-MMDD-XXX)
     const date = new Date();
-    document.getElementById('invoiceTRN').textContent = "UAE-TRN: 104052342300003";
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-const invoiceNumber = `KM-${month}${day}-${hours}${minutes}`;
+    const randomSuffix = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    const invoiceNumber = `KM-${month}${day}-${randomSuffix}`;
     
     // Format date
     const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -364,8 +339,8 @@ function downloadPdf() {
     const companyName = document.getElementById('companyName').value || '';
     const address = document.getElementById('address').value || '';
     const taxId = document.getElementById('taxId').value || '';
-    const trn = document.getElementById('invoiceTRN')?.textContent || 'UAE-TRN: 104052342300003';
-
+    
+    // Get currency and amounts
     const currencySelect = document.getElementById('currency');
     const currencyCode = currencySelect.value;
     const currencySymbol = currencySymbols[currencyCode] || currencyCode;
@@ -373,18 +348,31 @@ function downloadPdf() {
     const vatPercent = parseFloat(document.getElementById('vatPercent').value) || 0;
     const vatAmount = parseFloat(document.getElementById('vatAmount').value);
     const totalAmount = parseFloat(document.getElementById('totalAmount').value);
-
+    
+    // Set up PDF
     pdf.setFontSize(20);
-    pdf.setTextColor(0, 51, 102);
+    pdf.setTextColor(0, 51, 102); // Dark blue
+    
+    // Add logo to top-right corner
+    try {
+        const logoImg = new Image();
+        logoImg.src = 'img/logo.png';
+        pdf.addImage(logoImg, 'PNG', 150, 10, 40, 40);
+    } catch (error) {
+        console.error('Error adding logo:', error);
+    }
+    
+    // Add company name
     pdf.text('KM MARKETING & PR', 20, 30);
-
-    // TRN above Invoice Number
+    
+    // Add invoice details
     pdf.setFontSize(10);
-    pdf.setTextColor(0, 0, 0);
-    pdf.text(trn, 20, 35);  // ← TRN shown above
-
-    pdf.text(`Invoice #: ${invoiceNumber}`, 20, 42);
-    pdf.text(`Date: ${invoiceDate}`, 20, 47);
+    pdf.setTextColor(0, 0, 0); // Black
+    pdf.text(`Invoice #: ${invoiceNumber}`, 20, 40);
+    pdf.text(`Date: ${invoiceDate}`, 20, 45);
+    
+    // Add invoice from section
+    pdf.setFontSize(10);
     pdf.text('Invoice from: Kreative Minds', 20, 55);
     
     // Add invoice to section
